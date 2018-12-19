@@ -2,11 +2,11 @@
 #include <PubSubClient.h>
 //https://github.com/knolleary/pubsubclient/blob/master/src/PubSubClient.h
 // Update these with values suitable for your network.
-const char* ssid = "XX";
-const char* password = "XX";
-const char* mqtt_server = "XX";
-const char* mqtt_user_name = "XX";
-const char* mqtt_user_password ="XX";
+const char* ssid = "Guoxiaomei-office";
+const char* password = "xiaomei520";
+const char* mqtt_server = "10.12.2.120";
+const char* mqtt_user_name = "admin";
+const char* mqtt_user_password ="admin1";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -84,11 +84,12 @@ void reconnect() {
       // Once connected, publish an announcement...
       bool subscribeStateResult = client.subscribe(strStateTopic);
       Serial.print("subscribeStateResult:");
-      Serial.print(subscribeStateResult);
+      Serial.println(subscribeStateResult);
      
       bool publishResult = client.publish(strCommandTopic,"ON");
       Serial.print("publishResult:");
-      Serial.print(publishResult);
+      Serial.println(publishResult);
+      tryCount = 0;
 
     } else {
       Serial.print("failed, rc=");
