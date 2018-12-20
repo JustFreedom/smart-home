@@ -12,10 +12,9 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 int SwitchedPin = 0;
-String switch1;
 String strTopic;
-const char* strStateTopic = "ha/test1/state";
-const char* strCommandTopic = "ha/test1/command";
+const char* strStateTopic = "ha/test2/state";
+const char* strCommandTopic = "ha/test2/command";
 
 int tryCount = 0;
 
@@ -45,22 +44,20 @@ void setup_wifi() {
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  payload[length] = '\0';
+  Serial.print("Message arrived [");
   strTopic = String((char*)topic);
-  
-  Serial.println(); 
-  Serial.print("topic:");  
   Serial.print(strTopic);
-  
-  switch1 = String((char*)payload);
-
-  Serial.print("message:");  
-  Serial.println(switch1);
-  
+  Serial.print("] ");
+  //结尾符，必须要，payload为指针类型，
+  //如果不加的话，第一次接受到12345678，第二次接受到aa时，还是会输出aa345678,因为指针类型，在遇到截止符号时才结束
+  payload[length] = '\0';
+  String message = String((char*)payload);
+  Serial.println(message);
+   
   if(strTopic == "ha/switch1")
     {
    // switch1 = String((char*)payload);
-    if(switch1 == "ON")
+    if(message == "ON")
       {
         Serial.println("ON");
         digitalWrite(SwitchedPin, HIGH);
@@ -71,6 +68,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
         digitalWrite(SwitchedPin, LOW);
       }
     }
+     Serial.println("end");
 }
  
  
@@ -83,12 +81,15 @@ void reconnect() {
       Serial.println("connected");
       // Once connected, publish an announcement...
       bool subscribeStateResult = client.subscribe(strStateTopic);
-      Serial.print("subscribeStateResult:");
+      Serial.print("subscribeState topic:");
+      Serial.print(strStateTopic);
+      Serial.print(" result :");
       Serial.println(subscribeStateResult);
-     
+      /*
       bool publishResult = client.publish(strCommandTopic,"ON");
       Serial.print("publishResult:");
       Serial.println(publishResult);
+      */
       tryCount = 0;
 
     } else {
