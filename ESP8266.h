@@ -15,7 +15,7 @@ int SwitchedPin = 0;
 String strTopic;
 const char* strStateTopic = "ha/test2/state";
 const char* strCommandTopic = "ha/test2/command";
-
+const char* topicPre = "ha/test2/#";
 int tryCount = 0;
 
 String strPayload;
@@ -80,11 +80,11 @@ void reconnect() {
     if (client.connect("arduinoClient",mqtt_user_name,mqtt_user_password)) {
       Serial.println("connected");
       // Once connected, publish an announcement...
-      bool subscribeStateResult = client.subscribe(strStateTopic);
+      bool subscribeResult = client.subscribe(topicPre);
       Serial.print("subscribeState topic:");
-      Serial.print(strStateTopic);
+      Serial.print(topicPre);
       Serial.print(" result :");
-      Serial.println(subscribeStateResult);
+      Serial.println(subscribeResult);
       /*
       bool publishResult = client.publish(strCommandTopic,"ON");
       Serial.print("publishResult:");
